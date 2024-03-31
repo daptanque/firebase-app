@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
 
         /**
-        //RealTime db Reference
+        //RealTime db Reference - Simple value
         //https://fir-kotlin-bff91-default-rtdb.europe-west1.firebasedatabase.app/
         database = Firebase.database("https://fir-kotlin-bff91-default-rtdb.europe-west1.firebasedatabase.app").reference
 
@@ -46,6 +47,38 @@ class MainActivity : AppCompatActivity() {
 
         database.child("price").addValueEventListener(postListener)
         **/
+
+
+
+        //Custom objects
+
+        //RealTime db Reference - Simple value
+        //https://fir-kotlin-bff91-default-rtdb.europe-west1.firebasedatabase.app/
+        database = Firebase.database("https://fir-kotlin-bff91-default-rtdb.europe-west1.firebasedatabase.app").reference
+
+        //writing
+        val user1 : User = User("Jack","1234")
+
+        database.child("Users").setValue(user1)
+
+        //Reading
+        val pe = object  : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val u1 : User? = snapshot.getValue<User>()
+
+                if (u1 != null) {
+                    textView.text = "Username: " + u1.username.toString() + "\nPassword: " + u1.password.toString()
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        }
+
+        database.child("Users").addValueEventListener(pe)
 
     }
 }
