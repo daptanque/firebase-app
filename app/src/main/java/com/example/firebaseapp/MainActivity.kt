@@ -50,11 +50,27 @@ class MainActivity : AppCompatActivity() {
         docRef.get().addOnSuccessListener {
             document->
                 if(document!=null){
-                    textView.text = "${document.data}"
+                    //textView.text = "${document.data?.get("name")}"
                 }
         }
 
 
+        //get all documents in a collection
+        var allDocs : String = ""
+
+        db.collection("Users").get().addOnSuccessListener {
+            result ->
+                for(document in result){
+                    allDocs += "${document.data}\n"
+                }
+            textView.text = allDocs
+        }
+
+        //Updating data
+        db.collection("Users")
+            .document("user1")
+        //    .update("born","2311")
+            .delete()
 
         /**
         //RealTime db Reference - Simple value
