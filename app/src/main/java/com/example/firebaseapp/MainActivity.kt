@@ -10,6 +10,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +22,38 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val textView: TextView = findViewById(R.id.textView)
+
+
+        val db = Firebase.firestore
+
+        val users_collection = db.collection("Users")
+
+        val user1 = hashMapOf(
+            "name" to "jack",
+            "lname" to "reacher",
+            "born" to "1992"
+        )
+        val user2 = hashMapOf(
+            "name" to "jaohk",
+            "lname" to "reek",
+            "born" to "1991"
+        )
+
+        //create/add doc to collection
+        users_collection.document("user1").set(user1)
+        users_collection.document("user2").set(user2)
+
+
+        //read
+        val docRef = db.collection("Users").document("user1")
+
+        docRef.get().addOnSuccessListener {
+            document->
+                if(document!=null){
+                    textView.text = "${document.data}"
+                }
+        }
+
 
 
         /**
@@ -49,8 +82,8 @@ class MainActivity : AppCompatActivity() {
         **/
 
 
-
-        //Custom objects
+/**
+        //Custom objects - Firebase realtime db
 
         //RealTime db Reference - Simple value
         //https://fir-kotlin-bff91-default-rtdb.europe-west1.firebasedatabase.app/
@@ -79,6 +112,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         database.child("Users").addValueEventListener(pe)
-
+**/
     }
 }
